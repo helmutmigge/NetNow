@@ -1,0 +1,24 @@
+<resources>
+
+
+
+
+        <style name="ActionBar.Solid.NetNow.NoTitle" parent="@style/ActionBar.Solid.NetNow">
+            <item name="displayOptions">useLogo|showHome|showTitle</item>
+            <item name="logo">@drawable/ic_logo</item>
+        </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/ActionBar.Solid.NetNow</item>
+    </style>
+
+     <style name="ActionBar.Solid.NetNow" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+            <item name="background">@color/frame_dark</item>
+     </style>
+
+    <style name="NetNowTheme" parent="AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.NetNow.NoTitle</item>
+    </style>
+
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><!-- the parent view - provides the gray listfragment background color -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center_vertical"
+    android:background="@color/frame_background"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/list_item_channel_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentLeft="true"
+        android:scaleType="centerInside"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:adjustViewBounds="true"
+        />
+
+    <!-- the container view for the title and description -->
+    <RelativeLayout
+        android:id="@+id/list_item_channel_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/list_item_channel_icon"
+
+        android:background="@drawable/list_item_channel_selector"
+
+        android:paddingBottom="2dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <!-- the title view -->
+        <TextView
+            android:id="@+id/list_item_channel_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:text="656"
+            android:textSize="36sp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="#99b8c2"
+            />
+
+        <!-- the description view -->
+        <TextView
+            android:id="@+id/list_item_channel_name"
+            android:layout_below="@id/list_item_channel_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:text="History Channel"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="#FFFFFF"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

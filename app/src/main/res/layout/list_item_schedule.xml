@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:background="@color/item_schedule_background"
+    >
+
+    <TextView
+        android:id="@+id/list_item_schedule_start_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="02:30"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentLeft="true"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:fontFamily="sans-serif-light" />/>
+
+    <TextView
+        android:id="@+id/list_item_schedule_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Game of thrones Temp 1"
+        android:layout_toRightOf="@id/list_item_schedule_start_date"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:fontFamily="sans-serif-light" />
+
+</RelativeLayout>

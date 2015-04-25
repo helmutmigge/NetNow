@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="frame_background">#070e2b</color>
+    <color name="frame_dark">#1e284a</color>
+    <color name="frame_light">#4186ba</color>
+    <color name="frame_border">#8ecede</color>
+    <color name="item_schedule_background">#265782</color>
+    <color name="item_schedule_line">#4d9bb8</color>
+    <!--
+    <color name="frame_solid">#1e284a</color>
+      -->
+</resources>
