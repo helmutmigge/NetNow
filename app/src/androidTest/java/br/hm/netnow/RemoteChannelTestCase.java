@@ -5,13 +5,7 @@ import android.os.AsyncTask;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-
-import br.hm.netnow.commons.JSONCallback;
 import br.hm.netnow.data.NetNowContract;
-import br.hm.netnow.remote.RemoteChannel;
 import br.hm.netnow.task.FetchScheduleTask;
 import br.hm.netnow.utils.Utility;
 
@@ -30,21 +24,23 @@ public class RemoteChannelTestCase extends AndroidTestCase {
         });
     }
 */
-    public void testScheaduleTask() {
+    public void testScheaduleTask() throws InterruptedException {
         FetchScheduleTask task = new FetchScheduleTask(getContext());
         long timeServer = Utility.getTimeServerSetting(getContext());
-        task.execute("27",Long.toString(timeServer));
+        task.execute("27", Long.toString(timeServer));
         while (AsyncTask.Status.RUNNING == task.getStatus()) {
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
+                Log.e(RemoteChannelTestCase.class.getName(), e.getMessage(), e);
+                throw e;
             }
         }
-        String sort = NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER +" ASC";
-        String[] projection = new String[]{NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER,NetNowContract.ChannelEntry.COLUMN_CHANNEL_NAME};
-        Cursor cursor = getContext().getContentResolver().query(NetNowContract.ChannelEntry.CONTENT_URI,projection,null,null,sort);
-        while ( cursor.moveToNext()){
-            Log.i("row",cursor.getString(0) + "-" +cursor.getString(1));
+        String sort = NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER + " ASC";
+        String[] projection = new String[]{NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER, NetNowContract.ChannelEntry.COLUMN_CHANNEL_NAME};
+        Cursor cursor = getContext().getContentResolver().query(NetNowContract.ChannelEntry.CONTENT_URI, projection, null, null, sort);
+        while (cursor.moveToNext()) {
+            Log.i("row", cursor.getString(0) + "-" + cursor.getString(1));
         }
     }
 
