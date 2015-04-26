@@ -42,6 +42,7 @@ public class ChannelFragment extends ListFragment implements LoaderManager.Loade
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
+        getListView().setBackgroundResource(R.color.frame_background);
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 

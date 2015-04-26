@@ -17,8 +17,10 @@ import br.hm.netnow.data.NetNowContract.ScheduleEntry;
 import br.hm.netnow.remote.RemoteChannel;
 import br.hm.netnow.remote.RemoteSchedule;
 import br.hm.netnow.utils.Moment;
+import br.hm.netnow.utils.Utility;
 
 /**
+ * Checa guia de programação
  * Created by helmutmigge on 22/04/2015.
  */
 public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
@@ -45,14 +47,14 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
         JSONCallback scheduleCallBack = new ScheduleCallBack();
 
         try {
-            cleanScheduleBeforeDate(moment.getStartMilliseconds());
 
             remoteChannel.query(idCity, maxChannel, channelCallback);
 
             remoteSchedule.query(idCity, maxSchedule, moment, scheduleCallBack);
+            cleanScheduleBeforeDate(moment.getStartMilliseconds());
+            Utility.setLastFetchSchedule(context,moment.getEndMilliseconds());
         } catch (Exception e) {
             Log.e(FetchScheduleTask.class.getName(), e.getMessage(), e);
-            throw new RuntimeException(e);
         }
 
         return null;
