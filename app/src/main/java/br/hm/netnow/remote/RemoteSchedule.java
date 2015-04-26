@@ -4,12 +4,10 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 
 import br.hm.netnow.commons.JSONCallback;
 import br.hm.netnow.commons.TemplateUrl;
 import br.hm.netnow.utils.Moment;
-import br.hm.netnow.utils.Utility;
 
 /**
  * Created by helmutmigge on 21/04/2015.
@@ -17,34 +15,31 @@ import br.hm.netnow.utils.Utility;
 public class RemoteSchedule {
 
 
-
     private static String SCHEDULE_DEFAULT_URL = "http://programacao.netcombo.com.br/gatekeeper/exibicao/select?q=id_cidade:%d&wt=json";
 
     private static final String TIME_SERVER_URL = "http://www.netcombo.com.br/cs/Satellite/NET/tools/GetTimeServer";
 
     public static final String FIELD_END_DATE = "dh_fim";
-    public static final String FIELD_START_DATE ="dh_inicio";
-    public static final String FIELD_CITY_ID ="id_cidade";
-    public static final String FIELD_TITLE_ST ="st_titulo";
+    public static final String FIELD_START_DATE = "dh_inicio";
+    public static final String FIELD_CITY_ID = "id_cidade";
+    public static final String FIELD_TITLE_ST = "st_titulo";
     public static final String FIELD_TITLE = "titulo";
     public static final String FIELD_GENRE = "genero";
     public static final String FIELD_SCHEDULE_ID = "id_exibicao";
     public static final String FIELD_SHOW_ID = "id_programa";
     public static final String FIELD_CHANNEL_ID = "id_canal";
 
-    private TemplateUrl templateUrl = new TemplateUrl();
-
-    public void query(int idCity, int maxRows,Moment moment, JSONCallback callback) throws IOException, JSONException {
+    public void query(int idCity, int maxRows, Moment moment, JSONCallback callback) throws IOException, JSONException {
         System.currentTimeMillis();
         String urlString = urlBuilder(idCity, maxRows, moment);
-        templateUrl.query(urlString, callback);
+        TemplateUrl.query(urlString, callback);
 
     }
 
     public long currentTimeMillisOfTimeServer() {
         long result;
         try {
-            byte[] bytes = templateUrl.urlToByteArray(TIME_SERVER_URL);
+            byte[] bytes = TemplateUrl.urlToByteArray(TIME_SERVER_URL);
             String timeServerString = new String(bytes, "UTF-8").trim();
             result = Long.parseLong(timeServerString);
         } catch (UnsupportedEncodingException e) {
@@ -54,7 +49,7 @@ public class RemoteSchedule {
     }
 
 
-    private String urlBuilder(int idCity, int maxRows,Moment moment) {
+    private String urlBuilder(int idCity, int maxRows, Moment moment) {
 
 
         StringBuilder urlBuilder = new StringBuilder(String.format(SCHEDULE_DEFAULT_URL,
@@ -85,13 +80,13 @@ public class RemoteSchedule {
         return urlBuilder.toString();
     }
 
-    private String buildFieldRangeDate(Moment moment){
+    private String buildFieldRangeDate(Moment moment) {
         StringBuilder builder = new StringBuilder();
         return builder.append('[')
-            .append(moment.formatStartAsISO())
-            .append("+TO+")
-            .append(moment.formatEndAsISO())
-            .append(']').toString();
+                .append(moment.formatStartAsISO())
+                .append("+TO+")
+                .append(moment.formatEndAsISO())
+                .append(']').toString();
 
     }
 }

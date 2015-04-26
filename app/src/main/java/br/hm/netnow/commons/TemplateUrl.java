@@ -22,7 +22,7 @@ public class TemplateUrl {
 
     private static final String LOG_TAG = TemplateUrl.class.getSimpleName();
 
-    public <T> void query(String urlString, JSONCallback<T> callback)
+    public static <T> void query(String urlString, JSONCallback<T> callback)
             throws IOException, JSONException {
         URL url = new URL(urlString);
         HttpURLConnection urlConnection = null;
@@ -72,7 +72,7 @@ public class TemplateUrl {
 
     }
 
-    public byte[] urlToByteArray(String urlString) {
+    public static byte[] urlToByteArray(String urlString) {
         HttpURLConnection urlConnection = null;
         BufferedInputStream bis = null;
         try {

@@ -12,6 +12,7 @@ public class NetNowProvider extends ContentProvider {
     private static final int CATEGORY = 100;
     private static final int CHANNEL = 200;
     private static final int SCHEDULE = 300;
+    private static final int SHOW = 400;
 
     private NetNowSQLHelper netNowSQLHelper;
     private static UriMatcher uriMatcher;
@@ -21,6 +22,7 @@ public class NetNowProvider extends ContentProvider {
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_CATEGORY, CATEGORY);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_CHANNEL, CHANNEL);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SCHEDULE, SCHEDULE);
+        uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SHOW, SHOW);
     }
 
     public NetNowProvider() {
@@ -79,6 +81,11 @@ public class NetNowProvider extends ContentProvider {
                 long _id = db.insertOrThrow(NetNowContract.ScheduleEntry.TABLE_NAME, null, values);
                 insertedUri =
                         NetNowContract.ScheduleEntry.buildScheduleUri(_id);
+            }
+            case SHOW: {
+                long _id = db.insertOrThrow(NetNowContract.ShowEntry.TABLE_NAME, null, values);
+                insertedUri =
+                        NetNowContract.ShowEntry.buildShowUri(_id);
             }
         }
 
