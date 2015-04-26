@@ -22,7 +22,7 @@ public class TemplateUrl {
 
     private static final String LOG_TAG = TemplateUrl.class.getSimpleName();
 
-    public static <T> void query(String urlString, JSONCallback<T> callback)
+    public static  void query(String urlString, JSONCallback callback)
             throws IOException, JSONException {
         URL url = new URL(urlString);
         HttpURLConnection urlConnection = null;

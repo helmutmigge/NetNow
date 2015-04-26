@@ -99,10 +99,10 @@ public class NetNowSQLHelper extends SQLiteOpenHelper {
                         ShowEntry.COLUMN_SHOW_DIRECTOR + " TEXT NULL," +
                         ShowEntry.COLUMN_SHOW_DURATION_MINUTES + " INTEGER NOT NULL," +
                         ShowEntry.COLUMN_SHOW_GENRE + " TEXT NOT NULL," +
-                        ShowEntry.COLUMN_SHOW_ORIGINAL_TITLE + " TEXT NOT NULL," +
+                        ShowEntry.COLUMN_SHOW_ORIGINAL_TITLE + " TEXT NULL," +
                         ShowEntry.COLUMN_SHOW_TITLE + " TEXT NOT NULL," +
                         ShowEntry.COLUMN_SHOW_TITLE_ST + " TEXT NOT NULL," +
-                        ShowEntry.COLUMN_SHOW_RATING + " INTEGER NOT NULL," +
+                        ShowEntry.COLUMN_SHOW_RATING + " INTEGER NULL," +
                         ShowEntry.COLUMN_SHOW_SUBGENUS + " TEXT NOT NULL," +
                         "PRIMARY KEY (" + ShowEntry._ID + ") ON CONFLICT REPLACE);";
         db.execSQL(SQL_CREATE_SHOW_TABLE);

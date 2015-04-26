@@ -8,14 +8,21 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.hm.netnow.commons.JSONCallback;
+import br.hm.netnow.data.ChannelHelper;
 import br.hm.netnow.data.NetNowContract.CategoryEntry;
 import br.hm.netnow.data.NetNowContract.ChannelEntry;
 import br.hm.netnow.data.NetNowContract.ScheduleEntry;
+import br.hm.netnow.data.NetNowContract.ShowEntry;
+import br.hm.netnow.data.ShowHelper;
 import br.hm.netnow.remote.RemoteChannel;
 import br.hm.netnow.remote.RemoteSchedule;
+import br.hm.netnow.remote.RemoteShow;
 import br.hm.netnow.utils.Moment;
 import br.hm.netnow.utils.Utility;
 
@@ -28,11 +35,13 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
     private final Context context;
     private final RemoteChannel remoteChannel;
     private final RemoteSchedule remoteSchedule;
+    private final RemoteShow remoteShow;
 
     public FetchScheduleTask(Context context) {
         this.context = context;
         this.remoteChannel = new RemoteChannel();
         this.remoteSchedule = new RemoteSchedule();
+        this.remoteShow = new RemoteShow();
     }
 
     @Override
@@ -44,15 +53,16 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
         final Moment moment = Moment.instanceMoment(currentTimeMillis, 6, Moment.HOUR);
 
         JSONCallback channelCallback = new ChannelCallBack();
-        JSONCallback scheduleCallBack = new ScheduleCallBack();
+        ScheduleCallBack scheduleCallBack = new ScheduleCallBack();
 
         try {
 
             remoteChannel.query(idCity, maxChannel, channelCallback);
 
             remoteSchedule.query(idCity, maxSchedule, moment, scheduleCallBack);
+            scheduleCallBack.flush();
             cleanScheduleBeforeDate(moment.getStartMilliseconds());
-            Utility.setLastFetchSchedule(context,moment.getEndMilliseconds());
+            Utility.setLastFetchSchedule(context, moment.getEndMilliseconds());
         } catch (Exception e) {
             Log.e(FetchScheduleTask.class.getName(), e.getMessage(), e);
         }
@@ -65,10 +75,64 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
         context.getContentResolver().delete(ScheduleEntry.CONTENT_URI
                 , where
                 , new String[]{
-                        Long.toString(millisecounds)});
+                Long.toString(millisecounds)});
     }
 
-    private class ScheduleCallBack implements JSONCallback<Void> {
+    private class ShowCallBack implements JSONCallback {
+        public ContentValues contentValues;
+
+        @Override
+        public void processRow(Object json, int rowNum) throws JSONException {
+            JSONObject jsonObject = (JSONObject) json;
+            String showDirector = null;
+            if (jsonObject.has(RemoteShow.FIELD_DIRECTOR)) {
+                showDirector = jsonObject.getString(RemoteShow.FIELD_DIRECTOR);
+            }
+
+            String showCast = null;
+            if (jsonObject.has(RemoteShow.FIELD_CAST)) {
+                showCast = jsonObject.getString(RemoteShow.FIELD_CAST);
+            }
+            Integer showRating = null;
+            if (jsonObject.has(RemoteShow.FIELD_RATING)) {
+                showRating = jsonObject.getInt(RemoteShow.FIELD_RATING);
+            }
+
+            String showOriginalTitle =null;
+            if (jsonObject.has(RemoteShow.FIELD_ORIGINAL_TITLE)) {
+                showOriginalTitle = jsonObject.getString(RemoteShow.FIELD_ORIGINAL_TITLE);
+            }
+
+            String showTitleSt = jsonObject.getString(RemoteShow.FIELD_TITLE_ST);
+            String showTitle = jsonObject.getString(RemoteShow.FIELD_TITLE);
+            String showDescription = jsonObject.getString(RemoteShow.FIELD_DESCRIPTION);
+            String showSubgenus = jsonObject.getString(RemoteShow.FIELD_SUBGENUS);
+            String showGenre = jsonObject.getString(RemoteShow.FIELD_GENRE);
+            int showDurationMinutes = jsonObject.getInt(RemoteShow.FIELD_DURATION_MINUTES);
+            int showId = jsonObject.getInt(RemoteShow.FIELD_SHOW_ID);
+
+            int showContentRating = jsonObject.getInt(RemoteShow.FIELD_CONTENT_RATING);
+
+            contentValues = new ContentValues();
+            contentValues.put(ShowEntry._ID, showId);
+            contentValues.put(ShowEntry.COLUMN_SHOW_CAST, showCast);
+            contentValues.put(ShowEntry.COLUMN_SHOW_CONTENT_RATING, showContentRating);
+            contentValues.put(ShowEntry.COLUMN_SHOW_DESCRIPTION, showDescription);
+            contentValues.put(ShowEntry.COLUMN_SHOW_DIRECTOR, showDirector);
+            contentValues.put(ShowEntry.COLUMN_SHOW_DURATION_MINUTES, showDurationMinutes);
+            contentValues.put(ShowEntry.COLUMN_SHOW_GENRE, showGenre);
+            contentValues.put(ShowEntry.COLUMN_SHOW_TITLE, showTitle);
+            contentValues.put(ShowEntry.COLUMN_SHOW_TITLE_ST, showTitleSt);
+            contentValues.put(ShowEntry.COLUMN_SHOW_RATING, showRating);
+            contentValues.put(ShowEntry.COLUMN_SHOW_ORIGINAL_TITLE, showOriginalTitle);
+            contentValues.put(ShowEntry.COLUMN_SHOW_SUBGENUS, showSubgenus);
+        }
+    }
+
+    private class ScheduleCallBack implements JSONCallback {
+        private List<ContentValues> scheduleBuffer = new ArrayList<ContentValues>();
+        private List<ContentValues> showBuffer = new ArrayList<ContentValues>();
+        private ShowCallBack showCallBack = new ShowCallBack();
 
         @Override
         public void processRow(Object json, int rowNum) throws JSONException {
@@ -95,7 +159,17 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
                 contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_TITLE, scheduleTitle);
                 contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_GENRE, scheduleGenre);
 
-                addSchedule(contentValues);
+                if (ShowHelper.isExist(context, showId)) {
+                    addSchedule(contentValues);
+                } else {
+                    //scheduleBuffer.add(contentValues);
+                    remoteShow.query(showId, showCallBack);
+                    //showBuffer.add(showCallBack.contentValues);
+                    addShow(showCallBack.contentValues);
+                    addSchedule(contentValues);
+                }
+            } catch (IOException e) {
+                Log.e(FetchScheduleTask.class.getName(), e.getMessage(), e);
             } catch (ParseException e) {
                 Log.e(FetchScheduleTask.class.getName(), e.getMessage(), e);
                 throw new RuntimeException(e.getMessage(), e);
@@ -106,33 +180,68 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
             FetchScheduleTask.this.context.getContentResolver().insert(ScheduleEntry.CONTENT_URI, values);
         }
 
+        public void addSchedule(ContentValues[] values) {
+            FetchScheduleTask.this.context.getContentResolver().bulkInsert(ScheduleEntry.CONTENT_URI, values);
+        }
+
+        public void addShow(ContentValues values) {
+            FetchScheduleTask.this.context.getContentResolver().insert(ShowEntry.CONTENT_URI, values);
+        }
+
+
+        public void addShow(ContentValues[] values) {
+            FetchScheduleTask.this.context.getContentResolver().bulkInsert(ShowEntry.CONTENT_URI, values);
+        }
+
+        public void flush() {
+            if (!showBuffer.isEmpty()) {
+                ContentValues[] contentValueses = new ContentValues[showBuffer.size()];
+                showBuffer.toArray(contentValueses);
+                addShow(contentValueses);
+                showBuffer = null;
+            }
+
+            if (!scheduleBuffer.isEmpty()) {
+                ContentValues[] contentValueses = new ContentValues[scheduleBuffer.size()];
+                scheduleBuffer.toArray(contentValueses);
+                addSchedule(contentValueses);
+                scheduleBuffer = null;
+            }
+        }
+
+
     }
 
 
-    private class ChannelCallBack implements JSONCallback<Void> {
+    private class ChannelCallBack implements JSONCallback {
         @Override
         public void processRow(Object json, int rowNum) throws JSONException {
             JSONObject jsonObject = (JSONObject) json;
 
-            //Category
-            final long categoryId = jsonObject.getLong(RemoteChannel.FIELD_CATOGORY_ID);
-            final String categoryName = jsonObject.getString(RemoteChannel.FIELD_CATOGORY_NAME);
-            addCategory(categoryId, categoryName);
+            int channelId = jsonObject.getInt(RemoteChannel.FIELD_CHANNEL_ID);
+            if (!ChannelHelper.isExist(context, channelId)) {
+                //Category
+                final long categoryId = jsonObject.getLong(RemoteChannel.FIELD_CATOGORY_ID);
+                final String categoryName = jsonObject.getString(RemoteChannel.FIELD_CATOGORY_NAME);
+                addCategory(categoryId, categoryName);
 
 
-            //Channel
-            String channelSt = jsonObject.getString(RemoteChannel.FIELD_CHANNEL_ST);
-            long channelId = jsonObject.getLong(RemoteChannel.FIELD_CHANNEL_ID);
-            byte[] image = FetchScheduleTask.this.remoteChannel.image(channelSt, Long.toString(channelId));
+                //Channel
+                String channelSt = jsonObject.getString(RemoteChannel.FIELD_CHANNEL_ST);
+                int cityId = jsonObject.getInt(RemoteChannel.FIELD_CITY_ID);
+                int channelNumber = jsonObject.getInt(RemoteChannel.FIELD_CHANNEL_NUMBER);
+                String channelName = jsonObject.getString(RemoteChannel.FIELD_CHANNEL_NAME);
+                byte[] image = FetchScheduleTask.this.remoteChannel.image(channelSt, Long.toString(channelId));
 
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(ChannelEntry.COLUMN_CHANNEL_ST, channelSt);
-            contentValues.put(ChannelEntry._ID, channelId);
-            contentValues.put(ChannelEntry.COLUMN_CITY_ID, jsonObject.getLong(RemoteChannel.FIELD_CITY_ID));
-            contentValues.put(ChannelEntry.COLUMN_CHANNEL_NUMBER, jsonObject.getInt(RemoteChannel.FIELD_CHANNEL_NUMBER));
-            contentValues.put(ChannelEntry.COLUMN_CHANNEL_NAME, jsonObject.getString(RemoteChannel.FIELD_CHANNEL_NAME));
-            contentValues.put(ChannelEntry.COLUMN_CHANNEL_IMAGE, image);
-            addChannel(contentValues);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ChannelEntry.COLUMN_CHANNEL_ST, channelSt);
+                contentValues.put(ChannelEntry._ID, channelId);
+                contentValues.put(ChannelEntry.COLUMN_CITY_ID, cityId);
+                contentValues.put(ChannelEntry.COLUMN_CHANNEL_NUMBER, channelNumber);
+                contentValues.put(ChannelEntry.COLUMN_CHANNEL_NAME, channelName);
+                contentValues.put(ChannelEntry.COLUMN_CHANNEL_IMAGE, image);
+                addChannel(contentValues);
+            }
         }
 
         public void addChannel(ContentValues values) {

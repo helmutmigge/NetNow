@@ -81,11 +81,13 @@ public class NetNowProvider extends ContentProvider {
                 long _id = db.insertOrThrow(NetNowContract.ScheduleEntry.TABLE_NAME, null, values);
                 insertedUri =
                         NetNowContract.ScheduleEntry.buildScheduleUri(_id);
+                break;
             }
             case SHOW: {
                 long _id = db.insertOrThrow(NetNowContract.ShowEntry.TABLE_NAME, null, values);
                 insertedUri =
                         NetNowContract.ShowEntry.buildShowUri(_id);
+                break;
             }
         }
 
@@ -125,6 +127,18 @@ public class NetNowProvider extends ContentProvider {
             case SCHEDULE: {
                 cursor = netNowSQLHelper.getReadableDatabase().query(
                         NetNowContract.ScheduleEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case SHOW: {
+                cursor = netNowSQLHelper.getReadableDatabase().query(
+                        NetNowContract.ShowEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,

@@ -4,7 +4,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-public interface JSONCallback<E> {
+public interface JSONCallback {
 
     void processRow(Object json, int rowNum) throws JSONException;
 

@@ -49,7 +49,7 @@ public class RemoteShow {
                 .append(FIELD_CONTENT_RATING).append('+')
                 .append(FIELD_SHOW_ID).append('+')
                 .append(FIELD_DURATION_MINUTES).append('+')
-                .append(FIELD_GENRE).append('+').toString();
+                .append(FIELD_GENRE).toString();
 
 
     }
