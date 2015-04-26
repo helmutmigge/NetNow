@@ -20,7 +20,7 @@ public class MainActivity extends ActionBarActivity implements ChannelCallBack {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("");
-        getSupportActionBar().setElevation(0);
+
         isLand = Utility.isLand(this);
         if (isLand) {
 
