@@ -151,13 +151,14 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(ScheduleEntry._ID, scheduleId);
                 contentValues.put(ScheduleEntry.COLUMN_CHANNEL_ID, channelId);
-                contentValues.put(ScheduleEntry.COLUMN_CITY_ID, cityId);
+
                 contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_END_DATE, scheduleEndDate);
                 contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_START_DATE, scheduleStartDate);
                 contentValues.put(ScheduleEntry.COLUMN_SHOW_ID, showId);
-                contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_ST, scheduleSt);
-                contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_TITLE, scheduleTitle);
-                contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_GENRE, scheduleGenre);
+                //contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_ST, scheduleSt);
+                //contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_TITLE, scheduleTitle);
+                //contentValues.put(ScheduleEntry.COLUMN_SCHEDULE_GENRE, scheduleGenre);
+                //contentValues.put(ScheduleEntry.COLUMN_CITY_ID, cityId);
 
                 if (ShowHelper.isExist(context, showId)) {
                     addSchedule(contentValues);

@@ -2,19 +2,15 @@ package br.hm.netnow.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import br.hm.netnow.R;
 import br.hm.netnow.data.NetNowContract.ScheduleEntry;
+import br.hm.netnow.data.NetNowContract.ShowEntry;
 import br.hm.netnow.utils.Utility;
 
 
@@ -40,7 +36,7 @@ public class ScheduleAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         int id_column_schedule_title = cursor.getColumnIndex(
-                ScheduleEntry.COLUMN_SCHEDULE_TITLE);
+                ShowEntry.COLUMN_SHOW_TITLE);
         int id_column_schedule_startDate = cursor.getColumnIndex(
                 ScheduleEntry.COLUMN_SCHEDULE_START_DATE);
 

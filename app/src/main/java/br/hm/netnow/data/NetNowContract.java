@@ -56,13 +56,6 @@ public class NetNowContract {
         public static final String COLUMN_SCHEDULE_END_DATE = "schedule_end_date";
         public static final String COLUMN_SCHEDULE_START_DATE = "schedule_start_date";
 
-        /* inicio Apagar Posteriormente */
-        public static final String COLUMN_CITY_ID = "city_id";
-        public static final String COLUMN_SCHEDULE_ST = "schedule_st";
-        public static final String COLUMN_SCHEDULE_TITLE = "schedule_title";
-        public static final String COLUMN_SCHEDULE_GENRE = "schedule_genre";
-        /* fim Apagar Posteriormente */
-
         public static final String COLUMN_CHANNEL_ID = "channel_id";
         public static final String COLUMN_SHOW_ID = "show_id";
 
@@ -71,7 +64,7 @@ public class NetNowContract {
         }
 
         public static String TABLE_WITH_SHOW = ScheduleEntry.TABLE_NAME  + " INNER JOIN "
-                + ShowEntry.TABLE_NAME + " ON " + ScheduleEntry.COLUMN_SHOW_ID + " = " + ShowEntry._ID;
+                + ShowEntry.TABLE_NAME + " ON "+ ScheduleEntry.TABLE_NAME + "." + ScheduleEntry.COLUMN_SHOW_ID + " = " +ShowEntry.TABLE_NAME +"."+ ShowEntry._ID;
     }
 
     public static final class ShowEntry implements  BaseColumns{

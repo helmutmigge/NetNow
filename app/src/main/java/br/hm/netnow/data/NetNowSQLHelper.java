@@ -67,13 +67,9 @@ public class NetNowSQLHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_SHEDULE_TABLE =
                 "CREATE TABLE " + ScheduleEntry.TABLE_NAME + " (" +
                         ScheduleEntry._ID + " INTEGER," +
-                        ScheduleEntry.COLUMN_CITY_ID + " INTEGER NOT NULL," +
                         ScheduleEntry.COLUMN_CHANNEL_ID + " INTEGER NOT NULL," +
                         ScheduleEntry.COLUMN_SCHEDULE_END_DATE + " INTEGER NOT NULL," +
                         ScheduleEntry.COLUMN_SCHEDULE_START_DATE + " INTEGER NOT NULL," +
-                        ScheduleEntry.COLUMN_SCHEDULE_ST + " TEXT NOT NULL," +
-                        ScheduleEntry.COLUMN_SCHEDULE_GENRE + " TEXT NOT NULL," +
-                        ScheduleEntry.COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL," +
                         ScheduleEntry.COLUMN_SHOW_ID + " INTEGER NOT NULL," +
 
                         //Configura o chave estrangeira para canal

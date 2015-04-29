@@ -129,15 +129,13 @@ public class NetNowProvider extends ContentProvider {
                 break;
             }
             case SCHEDULE: {
-                cursor = netNowSQLHelper.getReadableDatabase().query(
-                        NetNowContract.ScheduleEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
+                SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+                queryBuilder.setTables(NetNowContract.ScheduleEntry.TABLE_WITH_SHOW);
+                cursor = queryBuilder.query(
+                        netNowSQLHelper.getReadableDatabase()
+                        ,projection
+                        ,selection
+                        ,selectionArgs,null,null,sortOrder);
                 break;
             }
             case SHOW: {

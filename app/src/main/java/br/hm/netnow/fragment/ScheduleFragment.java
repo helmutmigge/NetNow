@@ -14,6 +14,7 @@ import android.widget.ListView;
 import br.hm.netnow.ItemCallBack;
 import br.hm.netnow.R;
 import br.hm.netnow.adapter.ScheduleAdapter;
+import br.hm.netnow.data.NetNowContract;
 import br.hm.netnow.data.NetNowContract.ScheduleEntry;
 import br.hm.netnow.utils.Moment;
 import br.hm.netnow.utils.Utility;
@@ -86,18 +87,16 @@ public class ScheduleFragment extends ListFragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String sortOrder = ScheduleEntry.COLUMN_SCHEDULE_START_DATE + " ASC";
-        int cityId = Utility.getCityIdSetting(getActivity());
         long currentMilliseconds = Utility.getTimeServerSetting(getActivity());
         Moment moment = Moment.instanceMoment(currentMilliseconds, 6, Moment.HOUR);
 
         final String[] COLUMNS = {
                 ScheduleEntry.TABLE_NAME + "." + ScheduleEntry._ID,
                 ScheduleEntry.COLUMN_SCHEDULE_START_DATE,
-                ScheduleEntry.COLUMN_SCHEDULE_TITLE
+                NetNowContract.ShowEntry.COLUMN_SHOW_TITLE
         };
         final String SELECT = "(" + ScheduleEntry.COLUMN_SCHEDULE_START_DATE + " BETWEEN ? AND ? OR "
                 + ScheduleEntry.COLUMN_SCHEDULE_END_DATE + " BETWEEN ? AND ?) AND "
-                + ScheduleEntry.COLUMN_CITY_ID + " = ? AND "
                 + ScheduleEntry.COLUMN_CHANNEL_ID + " = ?";
         Uri uri = ScheduleEntry.CONTENT_URI;
         return new CursorLoader(
@@ -110,7 +109,6 @@ public class ScheduleFragment extends ListFragment implements LoaderManager.Load
                         , Long.toString(moment.getEndMilliseconds())
                         , Long.toString(moment.getStartMilliseconds())
                         , Long.toString(moment.getEndMilliseconds())
-                        , Integer.toString(cityId)
                         , Integer.toString(mChannelId)
                 },
                 sortOrder);
