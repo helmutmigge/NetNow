@@ -13,21 +13,18 @@ import br.hm.netnow.data.NetNowContract;
 import br.hm.netnow.fragment.ScheduleFragment;
 
 
-public class ScheduleActivity extends ActionBarActivity {
-
-    public static final String ARG_CHANNEL_ID = "channel_id";
+public class ScheduleActivity extends ActionBarActivity implements ItemCallBack {
+    private String mTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            int channelId = extras.getInt(NetNowContract.ChannelEntry._ID);
-            String title = extras.getString(NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER) +
-                    " - " + extras.getString(NetNowContract.ChannelEntry.COLUMN_CHANNEL_NAME);
-            setTitle(title);
-            getSupportActionBar().setLogo(null);
+        Bundle extras = getIntent().getExtras();
+        mTitle = extras.getString(NetNowContract.ChannelEntry.COLUMN_CHANNEL_NUMBER) +
+                " - " + extras.getString(NetNowContract.ChannelEntry.COLUMN_CHANNEL_NAME);
 
+        if (savedInstanceState == null) {
+            int channelId = extras.getInt(NetNowContract.ChannelEntry._ID);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.schedule_activity_content, ScheduleFragment.newInstance(channelId))
                     .commit();
@@ -35,9 +32,23 @@ public class ScheduleActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        setTitle(mTitle);
+        getSupportActionBar().setLogo(null);
+    }
+
+    @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent()
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
+
+    @Override
+    public void onItemSelected(String type, Bundle bundle) {
+        Intent showScheduleDetial = new Intent(this, ScheduleDetailActivity.class);
+        showScheduleDetial.putExtras(bundle);
+        startActivity(showScheduleDetial);
     }
 }
 

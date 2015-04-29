@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class NetNowProvider extends ContentProvider {
@@ -12,7 +13,9 @@ public class NetNowProvider extends ContentProvider {
     private static final int CATEGORY = 100;
     private static final int CHANNEL = 200;
     private static final int SCHEDULE = 300;
+    private static final int SCHEDULE_DETAIL_WITH_ID = 350;
     private static final int SHOW = 400;
+
 
     private NetNowSQLHelper netNowSQLHelper;
     private static UriMatcher uriMatcher;
@@ -23,6 +26,7 @@ public class NetNowProvider extends ContentProvider {
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_CHANNEL, CHANNEL);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SCHEDULE, SCHEDULE);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SHOW, SHOW);
+        uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_VIEW + "/" +NetNowContract.PATH_SCHEDULE + "/#", SCHEDULE_DETAIL_WITH_ID);
     }
 
     public NetNowProvider() {
@@ -148,6 +152,23 @@ public class NetNowProvider extends ContentProvider {
                 );
                 break;
             }
+            case SCHEDULE_DETAIL_WITH_ID: {
+                int id = NetNowContract.ScheduleDetailView.getIdFromUri(uri);
+                String[] args = new String[]{
+                        Integer.toString(id)
+                };
+
+                SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+                queryBuilder.setTables(NetNowContract.ScheduleDetailView.TABLES);
+                cursor = queryBuilder.query(
+                        netNowSQLHelper.getReadableDatabase()
+                        ,projection
+                        ,NetNowContract.ScheduleDetailView.WHERE_WHITN_ID
+                        ,args,null,null,sortOrder);
+                break;
+            }
+
+
         }
         if (cursor != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);

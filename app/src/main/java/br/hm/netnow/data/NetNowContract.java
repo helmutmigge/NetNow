@@ -1,6 +1,7 @@
 package br.hm.netnow.data;
 
 import android.content.ContentUris;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -15,6 +16,7 @@ public class NetNowContract {
     public static final String PATH_CHANNEL = "channel";
     public static final String PATH_SCHEDULE = "schedule";
     public static final String PATH_SHOW = "show";
+    public static final String PATH_VIEW = "view";
 
     public static final class CategoryEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -67,6 +69,9 @@ public class NetNowContract {
         public static Uri buildScheduleUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static String TABLE_WITH_SHOW = ScheduleEntry.TABLE_NAME  + " INNER JOIN "
+                + ShowEntry.TABLE_NAME + " ON " + ScheduleEntry.COLUMN_SHOW_ID + " = " + ShowEntry._ID;
     }
 
     public static final class ShowEntry implements  BaseColumns{
@@ -89,6 +94,25 @@ public class NetNowContract {
 
         public static Uri buildShowUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+    public static final class ScheduleDetailView implements BaseColumns{
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_VIEW).appendPath(PATH_SCHEDULE).build();
+
+        public static String TABLES = ScheduleEntry.TABLE_NAME + " INNER JOIN " + ChannelEntry.TABLE_NAME + " ON "
+                + ScheduleEntry.TABLE_NAME+ "."+  ScheduleEntry.COLUMN_CHANNEL_ID +" = " + ChannelEntry.TABLE_NAME + "."+ ChannelEntry._ID
+                + " INNER JOIN " + ShowEntry.TABLE_NAME + " ON " + ScheduleEntry.TABLE_NAME+ "."+ ScheduleEntry.COLUMN_SHOW_ID + " = "+ShowEntry.TABLE_NAME+ "."+ ShowEntry._ID;
+
+        public static final String WHERE_WHITN_ID =
+                ScheduleEntry.TABLE_NAME+"."+ScheduleEntry._ID + " = ? ";
+
+        public static Uri buildScheduleDetailUri(int id){
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static int getIdFromUri(Uri uri){
+            return Integer.parseInt(uri.getLastPathSegment());
         }
     }
 }

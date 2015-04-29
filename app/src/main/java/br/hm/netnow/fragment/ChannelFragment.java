@@ -15,7 +15,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import br.hm.netnow.ChannelCallBack;
+import br.hm.netnow.ItemCallBack;
 import br.hm.netnow.R;
 import br.hm.netnow.adapter.ChannelAdapter;
 import br.hm.netnow.data.NetNowContract.ChannelEntry;
@@ -68,13 +68,13 @@ public class ChannelFragment extends ListFragment implements LoaderManager.Loade
         String channelNumber = cursor.getString(id_column_channel_number);
 
 
-        if (getActivity() instanceof ChannelCallBack) {
-            ChannelCallBack callBack = (ChannelCallBack) getActivity();
+        if (getActivity() instanceof ItemCallBack) {
+            ItemCallBack callBack = (ItemCallBack) getActivity();
             Bundle bundle = new Bundle();
             bundle.putInt(ChannelEntry._ID, channelId);
             bundle.putString(ChannelEntry.COLUMN_CHANNEL_NUMBER, channelNumber);
             bundle.putString(ChannelEntry.COLUMN_CHANNEL_NAME, channelName);
-            callBack.onItemSelected(bundle);
+            callBack.onItemSelected(ChannelEntry.TABLE_NAME, bundle);
         }
         Toast.makeText(getActivity(), channelNumber + " - " + channelName, Toast.LENGTH_SHORT).show();
     }
@@ -128,6 +128,12 @@ public class ChannelFragment extends ListFragment implements LoaderManager.Loade
         if (moment.getEndMilliseconds() > lastFetchSchedule) {
             synchronizeNetwork();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getLoaderManager().destroyLoader(CHANNEL_LOADER);
     }
 
     //ToolBar Menu

@@ -5,8 +5,8 @@ import android.os.Bundle;
 /**
  * Created by helmutmigge on 23/04/2015.
  */
-public interface ChannelCallBack {
+public interface ItemCallBack {
 
-    public void onItemSelected(Bundle bundle );
+    public void onItemSelected(String type,Bundle bundle );
 }
 

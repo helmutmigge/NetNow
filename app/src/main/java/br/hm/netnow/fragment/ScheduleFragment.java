@@ -7,11 +7,11 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 
+import br.hm.netnow.ItemCallBack;
 import br.hm.netnow.R;
 import br.hm.netnow.adapter.ScheduleAdapter;
 import br.hm.netnow.data.NetNowContract.ScheduleEntry;
@@ -54,17 +54,28 @@ public class ScheduleFragment extends ListFragment implements LoaderManager.Load
         super.onViewCreated(view, savedInstanceState);
         getListView().setBackgroundResource(R.color.item_schedule_background);
         getListView().setDivider(getActivity().getResources().getDrawable(R.color.item_schedule_line));
-        int paddingLeftAndRight = Utility.convertDpToPx(getActivity(),10);
+        int paddingLeftAndRight = Utility.convertDpToPx(getActivity(), 10);
         getListView().setDividerHeight(Utility.convertDpToPx(getActivity(), 2));
-        getListView().setPadding(paddingLeftAndRight,0,paddingLeftAndRight,0);
+        getListView().setPadding(paddingLeftAndRight, 0, paddingLeftAndRight, 0);
         //setEmptyText(getString(R.string.list_empty_schedule));
     }
-/*
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_schedule, container, false);
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor cursor = (Cursor) getListAdapter().getItem(position);
+        int id_column_schedule_id = cursor.getColumnIndex(
+                ScheduleEntry._ID);
+        int scheduleId = cursor.getInt(id_column_schedule_id);
+
+        if (getActivity() instanceof ItemCallBack) {
+            ItemCallBack callBack = (ItemCallBack) getActivity();
+            Bundle bundle = new Bundle();
+            bundle.putInt(ScheduleEntry._ID, scheduleId);
+            callBack.onItemSelected(ScheduleEntry.TABLE_NAME,bundle);
+        }
+
     }
-*/
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
