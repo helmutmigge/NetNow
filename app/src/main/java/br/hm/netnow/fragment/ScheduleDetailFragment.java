@@ -85,34 +85,18 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (cursor.moveToNext()) {
             View rootView = getView();
-            configureChannelImageView(rootView, cursor);
-            TextView channelNumber = (TextView) rootView.findViewById(R.id.list_item_channel_number);
-            channelNumber.setText(ScheduleDetailHelper.getChannelNumber(cursor));
-
-            TextView channelName = (TextView) rootView.findViewById(R.id.list_item_channel_name);
-            channelName.setText(ScheduleDetailHelper.getChannelName(cursor));
 
             TextView scheduleDetailTitle = (TextView) rootView.findViewById(R.id.schedule_detail_title);
             scheduleDetailTitle.setText(ScheduleDetailHelper.getShowTitle(cursor));
 
             TextView scheduleDetailOriginalTitle = (TextView) rootView.findViewById(R.id.schedule_detail_original_title);
-            scheduleDetailOriginalTitle.setText(ScheduleDetailHelper.getShowOriginalTitle(cursor));
+            String originalTitle = ScheduleDetailHelper.getShowOriginalTitle(cursor);
+            if (originalTitle != null && !originalTitle.isEmpty()) {
+                scheduleDetailOriginalTitle.setText(originalTitle);
+            }else{
+                scheduleDetailOriginalTitle.setVisibility(View.GONE);
+            }
         }
-    }
-
-    private void configureChannelImageView(final View rootView, Cursor cursor) {
-        final ImageView channelImageView = (ImageView) rootView.findViewById(R.id.list_item_channel_icon);
-        final RelativeLayout channelFrameLayout = (RelativeLayout) rootView.findViewById(R.id.list_item_channel_frame);
-        // Configure Icon
-        channelFrameLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        channelImageView.getLayoutParams().height = channelFrameLayout.getMeasuredHeight();
-        channelImageView.getLayoutParams().width = channelFrameLayout.getMeasuredHeight();
-        byte[] imageByteArray = ScheduleDetailHelper.getChannelImage(cursor);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
-        int colorBackground = bitmap.getPixel(0, 0);
-        colorBackground = colorBackground == 0 ? Color.WHITE : colorBackground;
-        channelImageView.setImageBitmap(bitmap);
-        channelImageView.setBackgroundColor(colorBackground);
     }
 
     @Override

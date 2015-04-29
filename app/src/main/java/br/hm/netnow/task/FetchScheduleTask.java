@@ -140,10 +140,10 @@ public class FetchScheduleTask extends AsyncTask<String, Void, Void> {
             try {
                 long scheduleEndDate = Moment.formatDateISOHourMinuteAsLong(jsonObject.getString(RemoteSchedule.FIELD_END_DATE));
                 long scheduleStartDate = Moment.formatDateISOHourMinuteAsLong(jsonObject.getString(RemoteSchedule.FIELD_START_DATE));
-                int cityId = jsonObject.getInt(RemoteSchedule.FIELD_CITY_ID);
-                String scheduleSt = jsonObject.getString(RemoteSchedule.FIELD_TITLE_ST);
-                String scheduleTitle = jsonObject.getString(RemoteSchedule.FIELD_TITLE);
-                String scheduleGenre = jsonObject.getString(RemoteSchedule.FIELD_GENRE);
+//                int cityId = jsonObject.getInt(RemoteSchedule.FIELD_CITY_ID);
+//                String scheduleSt = jsonObject.getString(RemoteSchedule.FIELD_TITLE_ST);
+//                String scheduleTitle = jsonObject.getString(RemoteSchedule.FIELD_TITLE);
+//                String scheduleGenre = jsonObject.getString(RemoteSchedule.FIELD_GENRE);
                 int scheduleId = jsonObject.getInt(RemoteSchedule.FIELD_SCHEDULE_ID);
                 int showId = jsonObject.getInt(RemoteSchedule.FIELD_SHOW_ID);
                 int channelId = jsonObject.getInt(RemoteSchedule.FIELD_CHANNEL_ID);

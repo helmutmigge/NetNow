@@ -7,6 +7,10 @@
     <color name="frame_border">#8ecede</color>
     <color name="item_schedule_background">#265782</color>
     <color name="item_schedule_line">#4d9bb8</color>
+    <color name="range_content_rating_5">#02a14c</color>
+    <color name="range_content_rating_12">#fcc600</color>
+    <color name="range_content_rating_16">#eb1c23</color>
+    <color name="range_content_rating_18">#1f1c1d</color>
     <!--
     <color name="frame_solid">#1e284a</color>
       -->
