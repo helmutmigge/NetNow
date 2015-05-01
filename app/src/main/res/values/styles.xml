@@ -18,7 +18,7 @@
         <item name="actionBarStyle">@style/ActionBar.Solid.NetNow.NoTitle</item>
     </style>
 
-    <style name="RatingBarSmall" parent="@android:style/Widget.RatingBar">
+    <style name="RatingBarSmall" parent="@android:style/Widget.Holo.Light.RatingBar.Small">
         <item name="android:minHeight">18sp</item>
         <item name="android:maxHeight">18sp</item>
     </style>

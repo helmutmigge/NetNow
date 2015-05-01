@@ -1,9 +1,6 @@
 package br.hm.netnow.fragment;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +10,12 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import br.hm.netnow.R;
 import br.hm.netnow.data.NetNowContract;
@@ -96,6 +96,79 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
             }else{
                 scheduleDetailOriginalTitle.setVisibility(View.GONE);
             }
+
+            configureContentRantingView(rootView , cursor);
+
+            TextView genreView = (TextView) rootView.findViewById(R.id.schedule_detail_genre);
+            String genre = ScheduleDetailHelper.getShowGenre(cursor);
+            String subgenus = ScheduleDetailHelper.getShowSubgenus(cursor);
+            genreView.setText(genre + " / " + subgenus);
+
+            RatingBar ratingView = (RatingBar) rootView.findViewById(R.id.schedule_detail_rating);
+            int ranting = ScheduleDetailHelper.getShowRating(cursor);
+            if (ranting == 0) {
+                ratingView.setVisibility(View.GONE);
+            }else{
+                ratingView.setRating(ranting);
+            }
+
+            TextView durationMinutesView = (TextView) rootView.findViewById(R.id.schedule_detail_duration);
+            int durationMinutes = ScheduleDetailHelper.getShowDurationMinutes(cursor);
+            durationMinutesView.setText(durationMinutes + " " + getResources().getString(R.string.duration_minutes));
+
+
+            configureStartDateView(rootView,cursor);
+
+            TextView descriptionView = (TextView) rootView.findViewById(R.id.schedule_detail_decription);
+            String description = ScheduleDetailHelper.getShowDescription(cursor);
+            descriptionView.setText(description);
+
+            String director = ScheduleDetailHelper.getShowDirector(cursor);
+            if (director != null && ! director.isEmpty()) {
+                TextView directorView = (TextView) rootView.findViewById(R.id.schedule_detail_director);
+                directorView.setText(director);
+            }else{
+                RelativeLayout directorLayout = (RelativeLayout) rootView.findViewById(R.id.schedule_detail_container_director);
+                directorLayout.setVisibility(View.GONE);
+            }
+
+            String cast = ScheduleDetailHelper.getShowCast(cursor);
+            if (cast != null && !cast.isEmpty()){
+                TextView castView = (TextView) rootView.findViewById(R.id.schedule_detail_cast);
+                castView.setText(cast);
+            }else{
+                RelativeLayout directorLayout = (RelativeLayout) rootView.findViewById(R.id.schedule_detail_container_cast);
+                directorLayout.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
+    protected void configureStartDateView(View rootView, Cursor cursor){
+        SimpleDateFormat format = new SimpleDateFormat(getString(R.string.schedule_detal_start_date_format));
+        Date startDate = new Date(ScheduleDetailHelper.getScheduleStartDate(cursor));
+        String dateFormatStr = format.format(startDate);
+        String channelName = ScheduleDetailHelper.getChannelName(cursor);
+        TextView startDateView = (TextView) rootView.findViewById(R.id.schedule_detail_start_date);
+        startDateView.setText(dateFormatStr + " " + channelName);
+    }
+
+    protected void configureContentRantingView(View rootView, Cursor cursor){
+        TextView contentRantingView = (TextView) rootView.findViewById(R.id.schedule_detail_content_ranting);
+        ViewGroup containerContentRating = (ViewGroup) rootView.findViewById(R.id.schedule_detail_container_content_rating);
+        int contentRanting = ScheduleDetailHelper.getShowContentRating(cursor);
+        if (contentRanting <= 5){
+            containerContentRating.setBackgroundResource(R.color.range_content_rating_5);
+            contentRantingView.setText("L");
+        }else if (contentRanting <=12){
+            containerContentRating.setBackgroundResource(R.color.range_content_rating_12);
+            contentRantingView.setText(Integer.toString(contentRanting));
+        }else if (contentRanting <=16){
+            containerContentRating.setBackgroundResource(R.color.range_content_rating_16);
+            contentRantingView.setText(Integer.toString(contentRanting));
+        }else{
+            containerContentRating.setBackgroundResource(R.color.range_content_rating_18);
+            contentRantingView.setText(Integer.toString(contentRanting));
         }
     }
 

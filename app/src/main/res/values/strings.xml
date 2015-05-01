@@ -6,7 +6,10 @@
     <string name="list_empty_schedule">Not found try updating schedule</string>
     <string name="action_refresh">Refresh</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="duration_minutes">min</string>
+    <string name="schedule_detal_start_date_format">EEE. MMM. dd, HH:mm \'on\' </string>
+    <string name="schedule_detail_director">Director</string>
+    <string name="schedule_detail_cast">Cast</string>
+
 
 </resources>

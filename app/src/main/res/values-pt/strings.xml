@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="title_activity_schedule_detail">Mais detalhes</string>
+    <string name="list_empty_schedule">Não encontrado programação, tenta clicar em atualizar</string>
+    <string name="action_refresh">Atualizar</string>
+
+    <string name="duration_minutes">min</string>
+    <string name="schedule_detal_start_date_format">EEEE, dd \'de\' MMMM \'às\' HH:mm \',no\' </string>
+    <string name="schedule_detail_director">Diretor</string>
+    <string name="schedule_detail_cast">Elenco</string>
+</resources>
