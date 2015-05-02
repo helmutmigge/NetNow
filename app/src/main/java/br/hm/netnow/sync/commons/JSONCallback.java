@@ -1,8 +1,6 @@
-package br.hm.netnow.commons;
+package br.hm.netnow.sync.commons;
 
 import org.json.JSONException;
-
-import java.util.List;
 
 public interface JSONCallback {
 

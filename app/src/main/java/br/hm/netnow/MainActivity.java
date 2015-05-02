@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import br.hm.netnow.data.NetNowContract;
 import br.hm.netnow.fragment.ScheduleFragment;
+import br.hm.netnow.sync.NetnowSyncAdapter;
 import br.hm.netnow.utils.Utility;
 
 
@@ -29,6 +30,7 @@ public class MainActivity extends ActionBarActivity implements ItemCallBack {
             }
 
         }
+        NetnowSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override

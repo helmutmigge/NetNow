@@ -7,8 +7,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import br.hm.netnow.commons.JSONCallback;
-import br.hm.netnow.remote.RemoteSchedule;
+import br.hm.netnow.sync.commons.JSONCallback;
+import br.hm.netnow.sync.remote.RemoteSchedule;
 import br.hm.netnow.utils.Moment;
 import br.hm.netnow.utils.Utility;
 

@@ -11,5 +11,8 @@
     <string name="schedule_detail_director">Director</string>
     <string name="schedule_detail_cast">Cast</string>
 
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">netnow.hm.br</string>
+    <string name="content_authority">br.hm.netnow</string>
 
 </resources>

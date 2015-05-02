@@ -1,11 +1,11 @@
-package br.hm.netnow.remote;
+package br.hm.netnow.sync.remote;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
-import br.hm.netnow.commons.JSONCallback;
-import br.hm.netnow.commons.TemplateUrl;
+import br.hm.netnow.sync.commons.JSONCallback;
+import br.hm.netnow.sync.commons.TemplateUrl;
 
 public class RemoteChannel {
 
