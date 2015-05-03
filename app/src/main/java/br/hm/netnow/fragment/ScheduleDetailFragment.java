@@ -7,22 +7,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import br.hm.netnow.R;
 import br.hm.netnow.data.NetNowContract;
 import br.hm.netnow.data.ScheduleDetailHelper;
+import br.hm.netnow.utils.Utility;
 
 
-public class ScheduleDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ScheduleDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, CompoundButton.OnCheckedChangeListener {
 
     private static final String ARG_SCHEDULE_ID = "scheduleId";
 
@@ -30,6 +38,27 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
 
     private int mScheduleId;
 
+    private long mScheduleStartDate;
+
+
+
+
+    private boolean mScheduleRemember;
+
+    private Switch mRememberSwitch;
+
+    private synchronized boolean getRemenber(){
+        return mScheduleRemember;
+    }
+
+    private void setRemember(boolean remember) {
+        mScheduleRemember = remember;
+        synchronized (this) {
+            if (mRememberSwitch != null) {
+                mRememberSwitch.setChecked(true);
+            }
+        }
+    }
 
     public static ScheduleDetailFragment newInstance(int scheduleId) {
         ScheduleDetailFragment fragment = new ScheduleDetailFragment();
@@ -81,23 +110,41 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
                 null, null);
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_schedule_detail, menu);
+        MenuItem switchItem = menu.findItem(R.id.action_alarm);
+        mRememberSwitch = (Switch) MenuItemCompat.getActionView(switchItem);
+        mRememberSwitch.setText(getString(R.string.switch_remember));
+        mRememberSwitch.setChecked(getRemenber());
+        mRememberSwitch.setOnCheckedChangeListener(this);
+
+    }
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (cursor.moveToNext()) {
             View rootView = getView();
+            mScheduleStartDate = ScheduleDetailHelper.getScheduleStartDate(cursor);
 
+            boolean remember = ScheduleDetailHelper.getScheduleRemember(cursor);
+
+            setRemember(remember);
             TextView scheduleDetailTitle = (TextView) rootView.findViewById(R.id.schedule_detail_title);
-            scheduleDetailTitle.setText(ScheduleDetailHelper.getShowTitle(cursor));
+            String scheduleTitle = ScheduleDetailHelper.getShowTitle(cursor);
+            scheduleDetailTitle.setText(scheduleTitle);
 
             TextView scheduleDetailOriginalTitle = (TextView) rootView.findViewById(R.id.schedule_detail_original_title);
             String originalTitle = ScheduleDetailHelper.getShowOriginalTitle(cursor);
             if (originalTitle != null && !originalTitle.isEmpty()) {
                 scheduleDetailOriginalTitle.setText(originalTitle);
-            }else{
+            } else {
                 scheduleDetailOriginalTitle.setVisibility(View.GONE);
             }
 
-            configureContentRantingView(rootView , cursor);
+            configureContentRantingView(rootView, cursor);
 
             TextView genreView = (TextView) rootView.findViewById(R.id.schedule_detail_genre);
             String genre = ScheduleDetailHelper.getShowGenre(cursor);
@@ -108,7 +155,7 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
             int ranting = ScheduleDetailHelper.getShowRating(cursor);
             if (ranting == 0) {
                 ratingView.setVisibility(View.GONE);
-            }else{
+            } else {
                 ratingView.setRating(ranting);
             }
 
@@ -117,56 +164,56 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
             durationMinutesView.setText(durationMinutes + " " + getResources().getString(R.string.duration_minutes));
 
 
-            configureStartDateView(rootView,cursor);
+            configureStartDateView(rootView, cursor);
 
             TextView descriptionView = (TextView) rootView.findViewById(R.id.schedule_detail_decription);
             String description = ScheduleDetailHelper.getShowDescription(cursor);
             descriptionView.setText(description);
 
             String director = ScheduleDetailHelper.getShowDirector(cursor);
-            if (director != null && ! director.isEmpty()) {
+            if (director != null && !director.isEmpty()) {
                 TextView directorView = (TextView) rootView.findViewById(R.id.schedule_detail_director);
                 directorView.setText(director);
-            }else{
+            } else {
                 RelativeLayout directorLayout = (RelativeLayout) rootView.findViewById(R.id.schedule_detail_container_director);
                 directorLayout.setVisibility(View.GONE);
             }
 
             String cast = ScheduleDetailHelper.getShowCast(cursor);
-            if (cast != null && !cast.isEmpty()){
+            if (cast != null && !cast.isEmpty()) {
                 TextView castView = (TextView) rootView.findViewById(R.id.schedule_detail_cast);
                 castView.setText(cast);
-            }else{
+            } else {
                 RelativeLayout directorLayout = (RelativeLayout) rootView.findViewById(R.id.schedule_detail_container_cast);
                 directorLayout.setVisibility(View.GONE);
             }
-
         }
     }
 
-    protected void configureStartDateView(View rootView, Cursor cursor){
+    protected void configureStartDateView(View rootView, Cursor cursor) {
         SimpleDateFormat format = new SimpleDateFormat(getString(R.string.schedule_detal_start_date_format));
-        Date startDate = new Date(ScheduleDetailHelper.getScheduleStartDate(cursor));
+        Date startDate = new Date(mScheduleStartDate);
         String dateFormatStr = format.format(startDate);
         String channelName = ScheduleDetailHelper.getChannelName(cursor);
         TextView startDateView = (TextView) rootView.findViewById(R.id.schedule_detail_start_date);
-        startDateView.setText(dateFormatStr + " " + channelName);
+        String scheduleMessage = dateFormatStr + " " + channelName;
+        startDateView.setText(scheduleMessage);
     }
 
-    protected void configureContentRantingView(View rootView, Cursor cursor){
+    protected void configureContentRantingView(View rootView, Cursor cursor) {
         TextView contentRantingView = (TextView) rootView.findViewById(R.id.schedule_detail_content_ranting);
         ViewGroup containerContentRating = (ViewGroup) rootView.findViewById(R.id.schedule_detail_container_content_rating);
         int contentRanting = ScheduleDetailHelper.getShowContentRating(cursor);
-        if (contentRanting <= 5){
+        if (contentRanting <= 5) {
             containerContentRating.setBackgroundResource(R.color.range_content_rating_5);
             contentRantingView.setText("L");
-        }else if (contentRanting <=12){
+        } else if (contentRanting <= 12) {
             containerContentRating.setBackgroundResource(R.color.range_content_rating_12);
             contentRantingView.setText(Integer.toString(contentRanting));
-        }else if (contentRanting <=16){
+        } else if (contentRanting <= 16) {
             containerContentRating.setBackgroundResource(R.color.range_content_rating_16);
             contentRantingView.setText(Integer.toString(contentRanting));
-        }else{
+        } else {
             containerContentRating.setBackgroundResource(R.color.range_content_rating_18);
             contentRantingView.setText(Integer.toString(contentRanting));
         }
@@ -176,4 +223,20 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean remember) {
+        int rows = ScheduleDetailHelper.updateRemember(getActivity(), mScheduleId, remember);
+        if (rows != 0) {
+            if (remember) {
+                long scheduleRememberDate = Utility.getScheduleRememberDate(mScheduleStartDate);
+                Utility.registryAlarmNotifyRemember(getActivity(), mScheduleId, scheduleRememberDate);
+            } else {
+                Utility.unregistryAlarmNotifyRemember(getActivity(), mScheduleId);
+            }
+        }
+
+    }
 }
+

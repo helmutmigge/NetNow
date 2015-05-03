@@ -58,11 +58,18 @@ public class NetNowContract {
 
         public static final String COLUMN_CHANNEL_ID = "channel_id";
         public static final String COLUMN_SHOW_ID = "show_id";
+        public static final String COLUMN_SCHEDULE_REMEMBER = "schedule_remember";
+
 
         public static Uri buildScheduleUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static int getIdFromUri(Uri uri){
+            return Integer.parseInt(uri.getLastPathSegment());
+        }
 
+        public static final String WHERE_WHITN_ID =
+                ScheduleEntry.TABLE_NAME+"."+ScheduleEntry._ID + " = ? ";
         public static String TABLE_WITH_SHOW = ScheduleEntry.TABLE_NAME  + " INNER JOIN "
                 + ShowEntry.TABLE_NAME + " ON "+ ScheduleEntry.TABLE_NAME + "." + ScheduleEntry.COLUMN_SHOW_ID + " = " +ShowEntry.TABLE_NAME +"."+ ShowEntry._ID;
     }

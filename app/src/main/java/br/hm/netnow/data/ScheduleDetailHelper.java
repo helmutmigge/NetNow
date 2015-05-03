@@ -1,10 +1,14 @@
 package br.hm.netnow.data;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import br.hm.netnow.data.NetNowContract.ChannelEntry;
 import br.hm.netnow.data.NetNowContract.ScheduleEntry;
 import br.hm.netnow.data.NetNowContract.ShowEntry;
+import br.hm.netnow.utils.Utility;
 
 /**
  * Created by helmutmigge on 28/04/2015.
@@ -14,7 +18,7 @@ public class ScheduleDetailHelper {
     public static final String[] COLUMNS= new String[]{
             ScheduleEntry.TABLE_NAME+"."+ScheduleEntry._ID
             ,ScheduleEntry.TABLE_NAME+"."+ScheduleEntry.COLUMN_SCHEDULE_START_DATE
-            ,ScheduleEntry.TABLE_NAME+"."+ScheduleEntry.COLUMN_SCHEDULE_END_DATE
+            ,ScheduleEntry.TABLE_NAME+"."+ScheduleEntry.COLUMN_SCHEDULE_REMEMBER
             ,ChannelEntry.TABLE_NAME+"."+ChannelEntry.COLUMN_CHANNEL_NAME
             ,ShowEntry.TABLE_NAME+"."+ShowEntry.COLUMN_SHOW_TITLE
             ,ShowEntry.TABLE_NAME+"."+ShowEntry.COLUMN_SHOW_ORIGINAL_TITLE
@@ -26,9 +30,11 @@ public class ScheduleDetailHelper {
             ,ShowEntry.TABLE_NAME+"."+ShowEntry.COLUMN_SHOW_DESCRIPTION
             ,ShowEntry.TABLE_NAME+"."+ShowEntry.COLUMN_SHOW_DIRECTOR
             ,ShowEntry.TABLE_NAME+"."+ShowEntry.COLUMN_SHOW_CAST
+
     };
 
     public static long getScheduleStartDate(Cursor cursor){ return cursor.getLong(1); }
+    public static boolean getScheduleRemember(Cursor cursor){ return 0 != cursor.getInt(2); }
     public static String getChannelName(Cursor cursor){
         return cursor.getString(3);
     }
@@ -61,6 +67,14 @@ public class ScheduleDetailHelper {
     }
     public static String getShowCast(Cursor cursor){
         return cursor.getString(13);
+    }
+
+    public static int updateRemember(Context context,int scheduleId,boolean remember){
+        int rememberInt = remember?1:0;
+        Uri uri = ScheduleEntry.buildScheduleUri(scheduleId);
+        ContentValues values = new ContentValues();
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_REMEMBER,rememberInt);
+        return context.getContentResolver().update(uri,values,null,null);
     }
 
 }

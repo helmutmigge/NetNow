@@ -70,6 +70,8 @@ public class NetNowSQLHelper extends SQLiteOpenHelper {
                         ScheduleEntry.COLUMN_CHANNEL_ID + " INTEGER NOT NULL," +
                         ScheduleEntry.COLUMN_SCHEDULE_END_DATE + " INTEGER NOT NULL," +
                         ScheduleEntry.COLUMN_SCHEDULE_START_DATE + " INTEGER NOT NULL," +
+                        ScheduleEntry.COLUMN_SCHEDULE_REMEMBER + " INTEGER DEFAULT 0"  +
+                        " CHECK("+ScheduleEntry.COLUMN_SCHEDULE_REMEMBER +"=0  OR "+ScheduleEntry.COLUMN_SCHEDULE_REMEMBER+"=1)," +
                         ScheduleEntry.COLUMN_SHOW_ID + " INTEGER NOT NULL," +
 
                         //Configura o chave estrangeira para canal

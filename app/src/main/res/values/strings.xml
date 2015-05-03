@@ -10,9 +10,14 @@
     <string name="schedule_detal_start_date_format">EEE. MMM. dd, HH:mm \'on\' </string>
     <string name="schedule_detail_director">Director</string>
     <string name="schedule_detail_cast">Cast</string>
+    <string name="switch_remember">Remember</string>
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">netnow.hm.br</string>
-    <string name="content_authority">br.hm.netnow</string>
+    <string name="sync_account_type" translatable="false">netnow.hm.br</string>
+    <string name="content_authority" translatable="false">br.hm.netnow</string>
+
+
+    <!-- action -->
+    <string name="remember_action" translatable="false"></string>
 
 </resources>

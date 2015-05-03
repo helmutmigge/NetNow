@@ -13,6 +13,7 @@ public class NetNowProvider extends ContentProvider {
     private static final int CATEGORY = 100;
     private static final int CHANNEL = 200;
     private static final int SCHEDULE = 300;
+    private static final int SCHEDULE_WITH_ID = 301;
     private static final int SCHEDULE_DETAIL_WITH_ID = 350;
     private static final int SHOW = 400;
 
@@ -25,6 +26,7 @@ public class NetNowProvider extends ContentProvider {
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_CATEGORY, CATEGORY);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_CHANNEL, CHANNEL);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SCHEDULE, SCHEDULE);
+        uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SCHEDULE + "/#", SCHEDULE_WITH_ID );
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_SHOW, SHOW);
         uriMatcher.addURI(NetNowContract.CONTENT_AUTHORITY, NetNowContract.PATH_VIEW + "/" +NetNowContract.PATH_SCHEDULE + "/#", SCHEDULE_DETAIL_WITH_ID);
     }
@@ -128,6 +130,7 @@ public class NetNowProvider extends ContentProvider {
                 );
                 break;
             }
+
             case SCHEDULE: {
                 SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
                 queryBuilder.setTables(NetNowContract.ScheduleEntry.TABLE_WITH_SHOW);
@@ -177,7 +180,23 @@ public class NetNowProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase db = netNowSQLHelper.getWritableDatabase();
+        int affectedRows = 0;
+        final int uriType = uriMatcher.match(uri);
+        switch (uriType) {
+            case -1:
+                throw new UnsupportedOperationException("Not yet implemented");
+
+            case SCHEDULE_WITH_ID: {
+                int id = NetNowContract.ScheduleEntry.getIdFromUri(uri);
+                String[] args = new String[]{
+                        Integer.toString(id)
+                };
+                affectedRows = db.update(NetNowContract.ScheduleEntry.TABLE_NAME,
+                        values,NetNowContract.ScheduleEntry.WHERE_WHITN_ID, args);
+                break;
+            }
+        }
+        return affectedRows;
     }
 }

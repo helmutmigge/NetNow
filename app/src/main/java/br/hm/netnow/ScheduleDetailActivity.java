@@ -1,10 +1,12 @@
 package br.hm.netnow;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import br.hm.netnow.data.NetNowContract;
 import br.hm.netnow.fragment.ScheduleDetailFragment;
@@ -12,7 +14,9 @@ import br.hm.netnow.fragment.ScheduleDetailFragment;
 /**
  * Created by helmutmigge on 28/04/2015.
  */
-public class ScheduleDetailActivity extends ActionBarActivity {
+public class ScheduleDetailActivity extends ActionBarActivity  {
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,9 @@ public class ScheduleDetailActivity extends ActionBarActivity {
                     .commit();
         }
     }
+
+    //ToolBar Menu
+
 
     @Override
     protected void onStart() {
@@ -44,4 +51,6 @@ public class ScheduleDetailActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

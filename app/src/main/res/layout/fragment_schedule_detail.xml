@@ -1,8 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/frame_background"
+    android:background="@color/frame_background">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
 
     tools:context="br.hm.netnow.fragment.ScheduleDetailFragment">
 
@@ -228,3 +232,4 @@
 
 
 </RelativeLayout>
+</ScrollView>
