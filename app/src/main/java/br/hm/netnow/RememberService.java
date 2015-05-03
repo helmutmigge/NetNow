@@ -128,7 +128,7 @@ public class RememberService extends IntentService {
             intentScheduleDetailActivity.putExtra(NetNowContract.ScheduleEntry._ID, scheduleId);
 
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intentScheduleDetailActivity, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, scheduleId, intentScheduleDetailActivity, 0);
 
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
