@@ -2,8 +2,10 @@ package br.hm.netnow.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,10 +30,6 @@ public class Utility {
 
     public static void registryAlarmNotifyRemember(Context context, int scheduleId, long scheduleRememberDate) {
         PendingIntent pendingIntent = createPendingIntentNotifyRemember(context, scheduleId);
-        //test
-
-        scheduleRememberDate = getTimeServerSetting(context) + (5000);
-
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleRememberDate, pendingIntent);
 
@@ -47,7 +45,7 @@ public class Utility {
     private static PendingIntent createPendingIntentNotifyRemember(Context context, int scheduleId) {
         Intent intent = new Intent("br.hm.netnow.REMEMBER_ACTION");
         intent.putExtra(NetNowContract.ScheduleEntry._ID,scheduleId);
-        return PendingIntent.getBroadcast(context, 0, intent, 0);
+        return PendingIntent.getBroadcast(context, scheduleId, intent, 0);
     }
 
 

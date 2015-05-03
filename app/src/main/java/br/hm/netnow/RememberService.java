@@ -84,7 +84,7 @@ public class RememberService extends IntentService {
      */
     private void handleActionRememberNotification(int scheduleId) {
         String scheduleTitle = null;
-        String scheduleMessage = null;
+        String[] scheduleMessage = null;
         {
             String channelName = null;
             long scheduleStartDate = 0;
@@ -117,7 +117,9 @@ public class RememberService extends IntentService {
             Date startDate = new Date(scheduleStartDate);
             String dateFormatStr = format.format(startDate);
 
-            scheduleMessage = dateFormatStr + " " + channelName;
+            scheduleMessage = new String[]{
+                    dateFormatStr
+                    ,channelName};
 
         }
 
@@ -133,10 +135,16 @@ public class RememberService extends IntentService {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setAutoCancel(true);
             builder.setContentTitle(scheduleTitle);
-            builder.setContentText(scheduleMessage);
             builder.setSmallIcon(R.mipmap.ic_launcher);
             builder.setContentIntent(pendingIntent);
             builder.setVibrate(new long[]{150, 300, 150, 600});
+
+            NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+
+            for (String message : scheduleMessage){
+                style.addLine(message);
+            }
+            builder.setStyle(style);
 
             Notification notification = builder.build();
             notificationManager.notify(scheduleId, notification);

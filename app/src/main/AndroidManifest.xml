@@ -73,7 +73,6 @@
             android:exported="false" >
             <intent-filter>
                 <action android:name="br.hm.netnow.REMEMBER_ACTION" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

@@ -55,7 +55,7 @@ public class ScheduleDetailFragment extends Fragment implements LoaderManager.Lo
         mScheduleRemember = remember;
         synchronized (this) {
             if (mRememberSwitch != null) {
-                mRememberSwitch.setChecked(true);
+                mRememberSwitch.setChecked(remember);
             }
         }
     }
